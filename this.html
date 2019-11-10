@@ -1,0 +1,51 @@
+<script>
+// ES5
+$(function(){
+	$("#send-email").click(function () {
+		name = $(".send-mail-name").val();
+		email = $(".send-mail-email").val();
+		text = $(".send-mail-text").val();
+
+		isErr = validation(name, email, text);
+		if(isErr) {
+			alert("There is not enough input.");
+			return;
+		}
+		
+		data = createMessage(name, email, text);
+
+		sendMail(data);
+	});
+
+	function validation(name, email, text) {
+		return name === "" || email === "" || text === "";
+	}
+
+	function createMessage(name, email, text) {
+		message = "name: " + name;
+		message += "\n";
+		message += "email: " + email;
+		message += "\n";
+		message += "text: " + text;
+
+		return JSON.stringify({
+			message: message,
+		});
+	}
+
+	function sendMail(data) {
+		url = "https://";
+		
+		$.ajax({
+		type: "POST",
+		url: url,
+		data: data,
+		contentType: "application/json; charset=UTF-8",
+		success: function(msg){
+			console.log(msg);
+			if(msg["code"] !== 200) alert("email send error");
+		}
+		});
+	}
+});
+</script>
