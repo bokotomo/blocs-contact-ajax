@@ -2,6 +2,9 @@
 // ES5
 $(function(){
 	$("#send-email").click(function () {
+		apiUrl = "";
+		site = "";
+
 		name = $(".send-mail-name").val();
 		email = $(".send-mail-email").val();
 		text = $(".send-mail-text").val();
@@ -12,39 +15,39 @@ $(function(){
 			return;
 		}
 		
-		data = createMessage(name, email, text);
+		data = createMessage(name, email, text, site);
 
-		sendMail(data);
+		sendMail(apiUrl, data);
 	});
 
 	function validation(name, email, text) {
 		return name === "" || email === "" || text === "";
 	}
 
-	function createMessage(name, email, text) {
-		message = "name: " + name;
+	function createMessage(name, email, text, site) {
+		message = "Name: " + name;
 		message += "\n";
-		message += "email: " + email;
+		message += "Email: " + email;
 		message += "\n";
-		message += "text: " + text;
+		message += "Text: " + text;
+		message += "\n\n";
+		message += "Site: " + site;
 
 		return JSON.stringify({
 			message: message,
 		});
 	}
 
-	function sendMail(data) {
-		url = "https://";
-		
+	function sendMail(url, data) {
 		$.ajax({
-		type: "POST",
-		url: url,
-		data: data,
-		contentType: "application/json; charset=UTF-8",
-		success: function(msg){
-			console.log(msg);
-			if(msg["code"] !== 200) alert("email send error");
-		}
+			type: "POST",
+			url: url,
+			data: data,
+			contentType: "application/json; charset=UTF-8",
+			success: function(msg){
+				console.log(msg);
+				if(msg["code"] !== 200) alert("email send error");
+			}
 		});
 	}
 });
